@@ -12,7 +12,6 @@ const restartButton = document.getElementById('restart');
 const highscoresButton = document.getElementById('clear-scores');
 var highScoresArea = document.querySelector("#highScoresList");
 
-var totalScore;
 var userInitials;
 var score = 0;
 var timer = 59;
