@@ -49,6 +49,7 @@ function gameTimer() {
         document.getElementById("timer").innerText = timer;
         if (timer <=0) {
             clearInterval(countDown);
+            nextButton.classList.add('hide');
             gameOver();
         }
     }, 1000);
