@@ -1,3 +1,4 @@
+// variables list for html elements
 const startButton = document.getElementById('start-btn');
 const nextButton = document.getElementById('next-btn');
 const questionContainterEl = document.getElementById('question-container');
@@ -12,13 +13,15 @@ const restartButton = document.getElementById('restart');
 const highscoresButton = document.getElementById('clear-scores');
 var highScoresArea = document.querySelector("#highScoresList");
 
+// variables list
 var userInitials;
 var score = 0;
-var timer = 59;
+var timer = 60;
 var allScores = [];
 let shuffledQeustions;
 let currentQuestionIndex;
 
+// event listeners for buttons
 startButton.addEventListener('click', startGame);
 nextButton.addEventListener('click', () => {
     currentQuestionIndex++;
@@ -26,20 +29,24 @@ nextButton.addEventListener('click', () => {
 })
 saveButton.addEventListener('click', highScores);
 
+// function to start the game
 function startGame() {
+    // hides current display and unhides question display
     startButton.classList.add('hide');
     introEl.classList.add('hide');
+    questionContainterEl.classList.remove('hide');
+
+    // shuffles questions so that they aren't the same order every time
     shuffledQeustions = questions.sort(() => Math.random() - .5);
     currentQuestionIndex = 0;
-    questionContainterEl.classList.remove('hide');
     nextQuestion();
     gameTimer();
 }
 
 function gameTimer() {
     var countDown = setInterval(function() {
-        document.getElementById("timer").innerText = timer;
         timer--;
+        document.getElementById("timer").innerText = timer;
         if (timer <=0) {
             clearInterval(countDown);
             gameOver();
@@ -52,6 +59,7 @@ function nextQuestion() {
     showQuestion(shuffledQeustions[currentQuestionIndex])
 }
 
+// function to show the next question in the array
 function showQuestion(question) {
     questionEl.innerText = question.question;
     question.answers.forEach(answer => {
@@ -66,6 +74,7 @@ function showQuestion(question) {
     })
 }
 
+// function to reset background and buttons for next question
 function resetState() {
     nextButton.classList.add('hide');
     while (answerButtonsEl.firstChild) {
@@ -79,6 +88,7 @@ function resetState() {
 }
 
 function selectAnswer(e) {    
+    // resets buttons
     Array.from(answerButtonsEl.children).forEach(button => {
         if (button.classList.contains('correct')) {
             button.classList.remove('correct');
@@ -93,6 +103,8 @@ function selectAnswer(e) {
     setStatusClass(document.body, correct);
     setStatusClass(selectedButton, correct);
     
+    // if there are more questions, next button is displayed,
+    // otherwise finish buton is displayed
     if (shuffledQeustions.length > currentQuestionIndex + 1) {
         nextButton.classList.remove('hide');
         Array.from(answerButtonsEl.children).forEach(button => {
@@ -106,6 +118,8 @@ function selectAnswer(e) {
         finishButton.addEventListener('click', gameOver);
     }
 
+    // displays message for correct and incorrect answers
+    // and increases score or decreases time
     if (correct) {
         var displayText = "You are Correct! 🤩"
         score++;
@@ -117,6 +131,7 @@ function selectAnswer(e) {
     document.getElementById("right-wrong").innerText = displayText
 }
 
+// sets correct or wrong to class list for CSS handling
 function setStatusClass (element, correct) {
     clearStatusClass(element);
     if (correct) {
@@ -126,6 +141,7 @@ function setStatusClass (element, correct) {
     }
 }
 
+// clears correct or wrong from class list for css handling
 function clearStatusClass(element) {
     element.classList.remove('correct');
     element.classList.remove('wrong');
@@ -157,12 +173,15 @@ function highScores() {
     displayScores();
 }
 
-function scorePage(a, b) {
+function scorePage(x, y) {
 
     var userData = {
-        initials: a,
-        scores: b
+        initials: x,
+        scores: y
     };
+
+    // checks if local storage is empty or not and adds data to 
+    // array if not empty
     if (JSON.parse(localStorage.getItem("userData")) != null) {
         allScores = JSON.parse(localStorage.getItem("userData"));
     }
@@ -173,6 +192,8 @@ function scorePage(a, b) {
 
 function displayScores() {
     var storedScores = JSON.parse(localStorage.getItem("userData"));
+
+    // iterates through array and displays scores in ordered list
     if (storedScores !== null) {
         var scoreList = document.createElement("ol");
         for (var i = 0; i < storedScores.length; i++) {
@@ -186,6 +207,8 @@ function displayScores() {
     }
 }
 
+// placed question array at end of javascript as to not clutter up
+// the beginning.
 const questions = [
     {
         question: 'What company developed JavaScript?',
