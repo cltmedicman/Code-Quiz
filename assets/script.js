@@ -6,13 +6,17 @@ const answerButtonsEl = document.getElementById('answer-buttons');
 const finishButton = document.getElementById('finish-btn');
 const timerEl = document.getElementById("timer");
 const introEl = document.getElementById("start");
-const saveButton = document.getElementById('save');
+const saveButton = document.getElementById('save-btn');
+const initialsEL = document.getElementById('initials');
+const restartButton = document.getElementById('restart');
+const highscoresButton = document.getElementById('clear-scores');
+var highScoresArea = document.querySelector("#highScoresList");
 
 var totalScore;
 var userInitials;
 var score = 0;
-var timer = 119;
-
+var timer = 59;
+var allScores = [];
 let shuffledQeustions;
 let currentQuestionIndex;
 
@@ -21,6 +25,7 @@ nextButton.addEventListener('click', () => {
     currentQuestionIndex++;
     nextQuestion();
 })
+saveButton.addEventListener('click', highScores);
 
 function startGame() {
     startButton.classList.add('hide');
@@ -29,6 +34,10 @@ function startGame() {
     currentQuestionIndex = 0;
     questionContainterEl.classList.remove('hide');
     nextQuestion();
+    gameTimer();
+}
+
+function gameTimer() {
     var countDown = setInterval(function() {
         document.getElementById("timer").innerText = timer;
         timer--;
@@ -107,7 +116,6 @@ function selectAnswer(e) {
     }
     
     document.getElementById("right-wrong").innerText = displayText
-    
 }
 
 function setStatusClass (element, correct) {
@@ -131,16 +139,52 @@ function gameOver() {
     clearStatusClass(document.body);
     document.getElementById('finish-container').classList.remove('hide');
     document.getElementById('score').innerText = score;
-    saveButton.addEventListener('click', highScores());
 }
 
 function highScores() {
-    var initials = document.querySelector('initials').value;
-    window.localStorage.setItem('initials', intials);
-    window.localStorage.setItem('score', score);
+    userInitials = initialsEL.value;
+    scorePage(userInitials, score);
+    console.log(localStorage.getItem('userData'));
     document.getElementById('finish-container').classList.add('hide');
     document.getElementById('highscores').classList.remove('hide');
-    
+    restartButton.addEventListener('click', function() {
+        document.getElementById('highscores').classList.add('hide');
+        location.reload();
+    });
+    highscoresButton.addEventListener('click', function() {
+        localStorage.clear();
+        document.getElementById('clear').innerText = "Scores Have Been Cleared"
+    })
+    displayScores();
+}
+
+function scorePage(a, b) {
+
+    var userData = {
+        initials: a,
+        scores: b
+    };
+    if (JSON.parse(localStorage.getItem("userData")) != null) {
+        allScores = JSON.parse(localStorage.getItem("userData"));
+    }
+    allScores.push(userData);
+
+    localStorage.setItem("userData", JSON.stringify(allScores));
+}
+
+function displayScores() {
+    var storedScores = JSON.parse(localStorage.getItem("userData"));
+    if (storedScores !== null) {
+        var scoreList = document.createElement("ol");
+        for (var i = 0; i < storedScores.length; i++) {
+            var myInitials = storedScores[i].initials;
+            var myScore = storedScores[i].scores;
+            var scoreEntry = document.createElement("li");
+            scoreEntry.innerHTML = myInitials + " - " + myScore;
+            scoreList.appendChild(scoreEntry);
+        }
+        highScoresArea.appendChild(scoreList);
+    }
 }
 
 const questions = [

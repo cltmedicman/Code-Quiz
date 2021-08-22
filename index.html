@@ -17,7 +17,7 @@
             Keep in mind that incorrect answers will decrease your time by ten seconds.</p>
         </div>
         <div id="question-container" class="hide">
-            <div id="time-display">Time Remaining:&nbsp;<span id="timer">120</span></div>
+            <div id="time-display">Time Remaining:&nbsp;<span id="timer">60</span></div>
             <div id="question">Question</div>
             <div id="answer-buttons" class="btn-grid">
                 <button class="btn">Answer 1</button>
@@ -31,25 +31,25 @@
             <button id="next-btn" class="next-btn btn hide">Next</button>
             <button id="finish-btn" class="finish-btn btn hide">Done</button>
         </div>
+        <p id="right-wrong"></p>
         <div id="finish-container" class="hide">
             <h1>All Done!</h1>
             <p>Your Final Score is:&nbsp;<span id="score"></span></p><br>
             <form method="POST">
                 <div class="input">
-                    <label for="initals">Enter initials:</label>
-                    <input type="text" name="initials" id="initials" placeholder="ABC"/>
-                    <button id="save">Save</button>
+                    <label for="initials-label">Enter initials:</label>
+                    <input type="text" id="initials" placeholder="ABC"/>
+                    <button id="save-btn" type="button" class="btn">Save</button>
                 </div>
             </form>
         </div>
         <div id="highscores" class="hide">
             <h1>Highscores</h1>
-            <ul id="score-list">
-            </ul>
-            <button id="restart" class="btn"></button>
+            <div id="highScoresList"></div>
+            <button id="restart" class="btn">Restart</button>
             <button id="clear-scores" class="btn">Clear Highscores</button>
+            <p id="clear"></p>
         </div>
-        <p id="right-wrong"></p>
     </div>
     <script src="./assets/script.js"></script>
 </body>
