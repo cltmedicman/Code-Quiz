@@ -157,7 +157,8 @@ function gameOver() {
     document.getElementById('score').innerText = score;
 }
 
-function highScores() {
+function highScores(event) {
+    event.preventDefault();
     userInitials = initialsEL.value;
     scorePage(userInitials, score);
     console.log(localStorage.getItem('userData'));
