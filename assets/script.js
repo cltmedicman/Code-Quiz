@@ -23,14 +23,17 @@ let currentQuestionIndex;
 
 // event listeners for buttons
 startButton.addEventListener('click', startGame);
+
 nextButton.addEventListener('click', () => {
     currentQuestionIndex++;
     nextQuestion();
 })
+
 saveButton.addEventListener('click', highScores);
 
 // function to start the game
 function startGame() {
+
     // hides current display and unhides question display
     startButton.classList.add('hide');
     introEl.classList.add('hide');
@@ -44,9 +47,12 @@ function startGame() {
 }
 
 function gameTimer() {
+
     var countDown = setInterval(function() {
+
         timer--;
         document.getElementById("timer").innerText = timer;
+
         if (timer <=0) {
             clearInterval(countDown);
             nextButton.classList.add('hide');
@@ -56,20 +62,27 @@ function gameTimer() {
 }
 
 function nextQuestion() {
+
     resetState();
     showQuestion(shuffledQeustions[currentQuestionIndex])
 }
 
 // function to show the next question in the array
 function showQuestion(question) {
+
     questionEl.innerText = question.question;
+
     question.answers.forEach(answer => {
         const button = document.createElement('button');
+
         button.innerText = answer.text;
+
         button.classList.add('btn');
+
         if (answer.correct) {
             button.dataset.correct = answer.correct;
         }
+
         button.addEventListener('click', selectAnswer)
         answerButtonsEl.appendChild(button);
     })
@@ -77,23 +90,30 @@ function showQuestion(question) {
 
 // function to reset background and buttons for next question
 function resetState() {
+
     nextButton.classList.add('hide');
+
     while (answerButtonsEl.firstChild) {
         answerButtonsEl.removeChild(answerButtonsEl.firstChild);
     }
+
     clearStatusClass(document.body);
     Array.from(answerButtonsEl.children).forEach(button => {
         button.disabled = false;
     })
+
     document.getElementById('right-wrong').innerText = "";
 }
 
-function selectAnswer(e) {    
+function selectAnswer(e) {   
+
     // resets buttons
     Array.from(answerButtonsEl.children).forEach(button => {
+
         if (button.classList.contains('correct')) {
             button.classList.remove('correct');
         }
+
         if (button.classList.contains('wrong')) {
             button.classList.remove('wrong');
         }
@@ -107,26 +127,38 @@ function selectAnswer(e) {
     // if there are more questions, next button is displayed,
     // otherwise finish buton is displayed
     if (shuffledQeustions.length > currentQuestionIndex + 1) {
+
         nextButton.classList.remove('hide');
+
         Array.from(answerButtonsEl.children).forEach(button => {
             button.disabled = true;
+
         })
+
     } else {
+
         finishButton.classList.remove('hide');
+
         Array.from(answerButtonsEl.children).forEach(button => {
             button.disabled = true;
         })
+
         finishButton.addEventListener('click', gameOver);
+
     }
 
     // displays message for correct and incorrect answers
     // and increases score or decreases time
     if (correct) {
+
         var displayText = "You are Correct! 🤩"
         score++;
+
     } else {
+
         var displayText = "You are Wrong! 😭"
         timer -= 10;
+
     }
     
     document.getElementById("right-wrong").innerText = displayText
@@ -135,6 +167,7 @@ function selectAnswer(e) {
 // sets correct or wrong to class list for CSS handling
 function setStatusClass (element, correct) {
     clearStatusClass(element);
+
     if (correct) {
         element.classList.add('correct');
     } else {
@@ -144,60 +177,85 @@ function setStatusClass (element, correct) {
 
 // clears correct or wrong from class list for css handling
 function clearStatusClass(element) {
+
     element.classList.remove('correct');
     element.classList.remove('wrong');
+
 }
 
 function gameOver() {
+
     document.getElementById('question-container').classList.add('hide');
     document.getElementById('right-wrong').classList.add('hide');
+
     finishButton.classList.add('hide');
+
     clearStatusClass(document.body);
+
     document.getElementById('finish-container').classList.remove('hide');
+
     document.getElementById('score').innerText = score;
 }
 
 function highScores(event) {
     event.preventDefault();
+
     userInitials = initialsEL.value;
+
     scorePage(userInitials, score);
-    console.log(localStorage.getItem('userData'));
+
     document.getElementById('finish-container').classList.add('hide');
     document.getElementById('highscores').classList.remove('hide');
+
     restartButton.addEventListener('click', function() {
+
         document.getElementById('highscores').classList.add('hide');
         location.reload();
+
     });
+
     highscoresButton.addEventListener('click', function() {
+
         localStorage.clear();
-        document.getElementById('clear').innerText = "Scores Have Been Cleared"
+        document.getElementById('clear').innerText = "Scores Have Been Cleared";
+
     })
+
     displayScores();
 }
 
 function scorePage(x, y) {
 
     var userData = {
+
         initials: x,
         scores: y
+
     };
 
     // checks if local storage is empty or not and adds data to 
     // array if not empty
     if (JSON.parse(localStorage.getItem("userData")) != null) {
+
         allScores = JSON.parse(localStorage.getItem("userData"));
+
     }
+
     allScores.push(userData);
 
     localStorage.setItem("userData", JSON.stringify(allScores));
+
 }
 
 function displayScores() {
+
     var storedScores = JSON.parse(localStorage.getItem("userData"));
 
     // iterates through array and displays scores in ordered list
     if (storedScores !== null) {
+
         var scoreList = document.createElement("ol");
+
         for (var i = 0; i < storedScores.length; i++) {
             var myInitials = storedScores[i].initials;
             var myScore = storedScores[i].scores;
@@ -205,7 +263,9 @@ function displayScores() {
             scoreEntry.innerHTML = myInitials + " - " + myScore;
             scoreList.appendChild(scoreEntry);
         }
+
         highScoresArea.appendChild(scoreList);
+        
     }
 }
 
